@@ -3,6 +3,7 @@
 function init {
   mkdir ... .../Last .../Saves .../Diffs
   echo "0" > .../Version
+  [ "$1" -ne "" ] && echo "$1" > .../Remote
   cp -r * .../Last
 }
 
@@ -16,16 +17,15 @@ function save {
   echo "$((Version+1))" > .../Version
 }
 
-#function push {
-#  source .../Info
-#  [ -v REMOTE] && scp $(ls ...) $1@$2:/$REMOTE || echo "REMOTE not defined."
-#}
+function push {
+  [ ! -f .../Remote ] && scp * ... $(cat .../Remote) || echo "REMOTE not defined."
+}
 
 case "$1" in
   "init") init
   ;;
   "save") save
   ;;
-#  "push") push
-#  ;;
+  "push") push
+  ;;
 esac
