@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+function init {
+  mkdir ... .../Last .../Saves .../Diffs
+  echo "0" > .../Version
+  cp -r * .../Last
+}
+
+function save {
+  Version="$(cat .../Version)"
+  [ "$Version" -ne "0" ] && LastVersion="$((Version-1))"
+  [ -v LastVersion ] && diff -up .../Last/ $PWD > .../Diffs/"$Version:$((Version-1))".diff
+  zip .../Saves/"$Version".zip -r *
+  rm -r .../Last/*
+  cp -r * .../Last/
+  echo "$((Version+1))" > .../Version
+}
+
+#function push {
+#  source .../Info
+#  [ -v REMOTE] && scp $(ls ...) $1@$2:/$REMOTE || echo "REMOTE not defined."
+#}
+
+case "$1" in
+  "init") init
+  ;;
+  "save") save
+  ;;
+#  "push") push
+#  ;;
+esac
