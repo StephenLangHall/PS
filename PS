@@ -10,7 +10,7 @@ function init {
 function save {
   Version="$(cat .../Version)"
   [ "$Version" -ne "0" ] && LastVersion="$((Version-1))"
-  [ -v LastVersion ] && diff -up .../Last/ $PWD > .../Diffs/"$Version:$((Version-1))".diff
+  [ -v LastVersion ] && diff -up .../Last/ "$(pwd)" > .../Diffs/"$Version:$((Version-1))".diff
   zip .../Saves/"$Version".zip -r *
   rm -r .../Last/*
   cp -r * .../Last/
@@ -22,10 +22,8 @@ function push {
 }
 
 case "$1" in
-  "init") init
-  ;;
-  "save") save
-  ;;
-  "push") push
-  ;;
+  "init") init ;;
+  "save") save ;;
+  "push") push ;;
+  *) echo "No such command $1.\nPlease use 'init' 'save' or 'push'" ;;
 esac
